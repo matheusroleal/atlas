@@ -41,8 +41,8 @@ func StoreData(endpoint string, seed string, address string, data string, tag st
 		panic(err)
 	}
 	// Send the transaction to the tangle using given depth and minimum weight magnitude
-	_, err = api.SendTrytes(trytes, depth, mwm)
-	// bndl, err := api.SendTrytes(trytes, depth, mwm)
+	// _, err = api.SendTrytes(trytes, depth, mwm)
+	bndl, err := api.SendTrytes(trytes, depth, mwm)
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +76,7 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 		}
 		var txhash = bundle.TailTransactionHash(bndl)
 		log.Println("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
-		// log.Printf("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
+		log.Printf("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
 	}
 }
 

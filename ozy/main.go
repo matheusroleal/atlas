@@ -8,7 +8,7 @@ import (
 
 	"github.com/iotaledger/iota.go/trinary"
 	"github.com/matheusroleal/ozymandias/ozy/asset"
-	iotaHandler "github.com/matheusroleal/ozymandias/ozy/iota"
+	iotaHandler "github.com/matheusroleal/ozymandias/ozy/blockchain/iota"
 )
 
 // const endpoint = "https://nodes.devnet.iota.org"
@@ -38,14 +38,14 @@ func main() {
 		sum := 0
 		var bulk []string
 		for i := 0; i < 100000; i++ { // Simulating 84 hours per week data
-			checkpoint := asset.CreateCheckpoint(fmt.Sprintf("%s%d", "checkpoint ", sum), fmt.Sprintf("%d", j))
-			b, err := json.Marshal(checkpoint)
+			data := asset.CreateHashData(fmt.Sprintf("%s%d", "data ", sum), fmt.Sprintf("%d", j))
+			b, err := json.Marshal(data)
 			if err != nil {
 				panic(err)
 			}
-			data := string(b)
+			dataParsed := string(b)
 			// iotaHandler.StoreData(endpoint, seed, address, data, tag)
-			bulk = append(bulk, data)
+			bulk = append(bulk, dataParsed)
 			// fmt.Println(i)
 			sum += i
 		}
