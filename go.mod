@@ -1,4 +1,4 @@
-module github.com/matheusroleal/ozymandias
+module github.com/matheusroleal/atlas
 
 go 1.16
 

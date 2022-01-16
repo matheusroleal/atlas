@@ -13,12 +13,8 @@ type Employee struct {
 	City string
 }
 
-func dbConn(driver string, user string, password string, database string) (db *sql.DB) {
-	dbDriver := driver
-	dbUser := user
-	dbPass := password
-	dbName := database
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
+func dbConn(dbDriver string, dbUser string, dbPass string, dbName string, dbAddress string) (db *sql.DB) {
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@"+dbAddress+"/"+dbName)
 	if err != nil {
 		panic(err.Error())
 	}

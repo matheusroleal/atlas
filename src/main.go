@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/iotaledger/iota.go/trinary"
-	"github.com/matheusroleal/ozymandias/ozy/asset"
-	iotaHandler "github.com/matheusroleal/ozymandias/ozy/blockchain/iota"
+	"github.com/matheusroleal/atlas/src/asset"
+	iotaHandler "github.com/matheusroleal/atlas/src/blockchain/iota"
+	storage "github.com/matheusroleal/atlas/src/storage"
 )
 
-// const endpoint = "https://nodes.devnet.iota.org"
 const endpoint = "https://nodes.devnet.iota.org:443"
 
 // We need a dummy seed even though we don't sign, because the API requires a seed to send
@@ -32,20 +32,22 @@ func main() {
 	// Create blocks of data with tags
 	for j := 0; j < 31; j++ {
 		var tag = RandStringRunes(25)
-		// var tag = "XVLBZGBAICMRAJWWHTHCTCUAX"
 		fmt.Println(tag)
 		// Our data is very long here, it needs to be split over several transactions, 3 in this case
 		sum := 0
 		var bulk []string
-		for i := 0; i < 100000; i++ { // Simulating 84 hours per week data
-			data := asset.CreateHashData(fmt.Sprintf("%s%d", "data ", sum), fmt.Sprintf("%d", j))
+		for i := 0; i < 10; i++ {
+			data := asset.CreateAsset(fmt.Sprintf("%s%d", "checkpoint ", sum), fmt.Sprintf("%d", j))
 			b, err := json.Marshal(data)
 			if err != nil {
 				panic(err)
 			}
 			dataParsed := string(b)
-			// iotaHandler.StoreData(endpoint, seed, address, data, tag)
-			bulk = append(bulk, dataParsed)
+			dataHashed := asset.HashAsset(dataParsed)
+			// Send data to relational database
+			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data)
+			// Bulk hashed data to be sent to Blockchain
+			bulk = append(bulk, dataHashed)
 			// fmt.Println(i)
 			sum += i
 		}
