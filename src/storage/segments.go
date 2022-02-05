@@ -16,8 +16,8 @@ func IndexSegments(driver string, user string, password string, database string,
 	res := []asset.Asset{}
 	for selDB.Next() {
 		var id int
-		var owner, data string
-		err = selDB.Scan(&id, &owner, &data)
+		var owner, data, reference string
+		err = selDB.Scan(&id, &owner, &data, &reference)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -38,8 +38,8 @@ func ShowSegment(driver string, user string, password string, database string, a
 	emp := asset.Asset{}
 	for selDB.Next() {
 		var id int
-		var owner, data string
-		err = selDB.Scan(&id, &owner, &data)
+		var owner, data, reference string
+		err = selDB.Scan(&id, &owner, &data, &reference)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -50,13 +50,13 @@ func ShowSegment(driver string, user string, password string, database string, a
 	defer db.Close()
 }
 
-func InsertSegment(driver string, user string, password string, database string, address string, owner string, data string) {
+func InsertSegment(driver string, user string, password string, database string, address string, owner string, data string, reference string) {
 	db := dbConn(driver, user, password, database, address)
-	insForm, err := db.Prepare("INSERT INTO Segments(owner, data) VALUES(?,?)")
+	insForm, err := db.Prepare("INSERT INTO Segments(owner, data, reference) VALUES(?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}
-	insForm.Exec(owner, data)
+	insForm.Exec(owner, data, reference)
 	log.Println("INSERT: Owner: " + owner + " | Data: " + data)
 	defer db.Close()
 }

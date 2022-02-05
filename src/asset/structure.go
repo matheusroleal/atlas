@@ -8,16 +8,17 @@ import (
 )
 
 type Asset struct {
-	ID    string `json:"ID"`
-	Owner string `json:"owner"`
-	Data  string `json:"data"`
+	ID        string `json:"ID"`
+	Owner     string `json:"owner"`
+	Data      string `json:"data"`
+	Reference string `json:"reference"`
 }
 
-func CreateAsset(data string, mobileID string) *Asset {
+func CreateAsset(data string, mobileID string, ref string) *Asset {
 	// Generate a UUID
 	id := uuid.New()
 	// Create a new hash message with the data received
-	asset := Asset{ID: id.String(), Owner: mobileID, Data: data}
+	asset := Asset{ID: id.String(), Owner: mobileID, Data: data, Reference: ref}
 	return &asset
 }
 

@@ -37,7 +37,7 @@ func main() {
 		sum := 0
 		var bulk []string
 		for i := 0; i < 10; i++ {
-			data := asset.CreateAsset(fmt.Sprintf("%s%d", "checkpoint ", sum), fmt.Sprintf("%d", j))
+			data := asset.CreateAsset(fmt.Sprintf("%s%d", "checkpoint ", sum), fmt.Sprintf("%d", j), "Track1")
 			b, err := json.Marshal(data)
 			if err != nil {
 				panic(err)
@@ -45,7 +45,7 @@ func main() {
 			dataParsed := string(b)
 			dataHashed := asset.HashAsset(dataParsed)
 			// Send data to relational database
-			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data)
+			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
 			// Bulk hashed data to be sent to Blockchain
 			bulk = append(bulk, dataHashed)
 			// fmt.Println(i)
