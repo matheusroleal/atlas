@@ -6,7 +6,7 @@ import (
 	"github.com/matheusroleal/atlas/src/asset"
 )
 
-func IndexSegments(driver string, user string, password string, database string, address string) {
+func IndexSegments(driver string, user string, password string, database string, address string) []asset.Asset {
 	db := dbConn(driver, user, password, database, address)
 	selDB, err := db.Query("SELECT * FROM Segments ORDER BY id DESC")
 	if err != nil {
@@ -27,14 +27,16 @@ func IndexSegments(driver string, user string, password string, database string,
 		res = append(res, emp)
 	}
 	defer db.Close()
+	return res
 }
 
-func ShowSegment(driver string, user string, password string, database string, address string, id string) {
+func GetSegment(driver string, user string, password string, database string, address string, id string) []asset.Asset {
 	db := dbConn(driver, user, password, database, address)
-	selDB, err := db.Query("SELECT * FROM Segments WHERE id=?", id)
+	selDB, err := db.Query("SELECT * FROM Segments WHERE Reference=?", id)
 	if err != nil {
 		panic(err.Error())
 	}
+	res := []asset.Asset{}
 	emp := asset.Asset{}
 	for selDB.Next() {
 		var id int
@@ -46,8 +48,10 @@ func ShowSegment(driver string, user string, password string, database string, a
 		emp.ID = string(rune(id))
 		emp.Owner = owner
 		emp.Data = data
+		res = append(res, emp)
 	}
 	defer db.Close()
+	return res
 }
 
 func InsertSegment(driver string, user string, password string, database string, address string, owner string, data string, reference string) {

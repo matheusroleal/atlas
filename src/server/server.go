@@ -14,10 +14,12 @@ import (
 func RunServer() {
 	router := httprouter.New()
 
+	// API setup Routes
 	router.GET("/", handler.IndexHandler)
 	router.GET("/healthcheck", handler.HealthcheckHandler)
 
-	// router.POST("/inspect", handler.InspectHandler)
+	// Track Routes
+	router.POST("/track/create", handler.SegmentCreate)
 
 	addr := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
 	log.Println()

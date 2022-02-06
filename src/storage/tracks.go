@@ -6,7 +6,7 @@ import (
 	"github.com/matheusroleal/atlas/src/asset"
 )
 
-func IndexTracks(driver string, user string, password string, database string, address string) {
+func IndexTracks(driver string, user string, password string, database string, address string) []asset.Asset {
 	db := dbConn(driver, user, password, database, address)
 	selDB, err := db.Query("SELECT * FROM Tracks ORDER BY id DESC")
 	if err != nil {
@@ -27,14 +27,16 @@ func IndexTracks(driver string, user string, password string, database string, a
 		res = append(res, emp)
 	}
 	defer db.Close()
+	return res
 }
 
-func ShowTrack(driver string, user string, password string, database string, address string, id string) {
+func ShowTrack(driver string, user string, password string, database string, address string, id string) []asset.Asset {
 	db := dbConn(driver, user, password, database, address)
-	selDB, err := db.Query("SELECT * FROM Tracks WHERE id=?", id)
+	selDB, err := db.Query("SELECT * FROM Tracks WHERE Reference=?", id)
 	if err != nil {
 		panic(err.Error())
 	}
+	res := []asset.Asset{}
 	emp := asset.Asset{}
 	for selDB.Next() {
 		var id int
@@ -46,8 +48,10 @@ func ShowTrack(driver string, user string, password string, database string, add
 		emp.ID = string(rune(id))
 		emp.Owner = owner
 		emp.Data = data
+		res = append(res, emp)
 	}
 	defer db.Close()
+	return res
 }
 
 func InsertTrack(driver string, user string, password string, database string, address string, owner string, data string, reference string) {
@@ -57,6 +61,6 @@ func InsertTrack(driver string, user string, password string, database string, a
 		panic(err.Error())
 	}
 	insForm.Exec(owner, data, reference)
-	log.Println("INSERT: Owner: " + owner + " | Data: " + data)
+	log.Println("[STORAGE] INSERT: Owner: " + owner + " | Data: " + data)
 	defer db.Close()
 }

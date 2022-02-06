@@ -22,6 +22,10 @@ func CreateAsset(data string, mobileID string, ref string) *Asset {
 	return &asset
 }
 
+func CompressAsset(segments []Asset) string {
+	return segments[0].Data + "," + segments[len(segments)-1].Data
+}
+
 func HashAsset(data string) string {
 	h := sha1.New()
 	h.Write([]byte(data))

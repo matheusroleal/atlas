@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
@@ -32,7 +33,7 @@ func main() {
 	// Create blocks of data with tags
 	for j := 0; j < 31; j++ {
 		var tag = RandStringRunes(25)
-		fmt.Println(tag)
+		log.Println("[Atlas][Test] " + tag)
 		// Our data is very long here, it needs to be split over several transactions, 3 in this case
 		sum := 0
 		var bulk []string
@@ -48,15 +49,15 @@ func main() {
 			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
 			// Bulk hashed data to be sent to Blockchain
 			bulk = append(bulk, dataHashed)
-			// fmt.Println(i)
+			// log.Println(i)
 			sum += i
 		}
-		fmt.Println("Sending Messages in a Bulk")
+		log.Println("[Atlas][Test] Sending Messages in a Bulk")
 		iotaHandler.BulkData(endpoint, seed, address, bulk, tag)
 		t1 := time.Now()
 		iotaHandler.RetriveData(endpoint, address, tag)
 		t2 := time.Now()
 		diff := t2.Sub(t1)
-		fmt.Println(diff)
+		log.Println(diff)
 	}
 }
