@@ -61,6 +61,6 @@ func InsertSegment(driver string, user string, password string, database string,
 		panic(err.Error())
 	}
 	insForm.Exec(owner, data, reference)
-	log.Println("INSERT: Owner: " + owner + " | Data: " + data)
+	log.Println("[STORAGE] INSERT: Owner: " + owner + " | Data: " + data)
 	defer db.Close()
 }

@@ -19,7 +19,7 @@ func RunServer() {
 	router.GET("/healthcheck", handler.HealthcheckHandler)
 
 	// Track Routes
-	router.POST("/track/create", handler.SegmentCreate)
+	router.POST("/track", handler.SegmentCreate)
 
 	addr := fmt.Sprintf("%s:%s", os.Getenv("HOST"), os.Getenv("PORT"))
 	log.Println()

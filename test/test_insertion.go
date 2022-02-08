@@ -49,7 +49,6 @@ func main() {
 			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
 			// Bulk hashed data to be sent to Blockchain
 			bulk = append(bulk, dataHashed)
-			// log.Println(i)
 			sum += i
 		}
 		log.Println("[Atlas][Test] Sending Messages in a Bulk")
