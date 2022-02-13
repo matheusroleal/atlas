@@ -7,12 +7,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Employee struct {
-	Id   int
-	Name string
-	City string
-}
-
 func dbConn(dbDriver string, dbUser string, dbPass string, dbName string, dbAddress string) (db *sql.DB) {
 	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@"+dbAddress+"/"+dbName)
 	if err != nil {
