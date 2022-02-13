@@ -35,7 +35,7 @@ type NewTrack struct {
 	Identification string
 }
 
-func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// Declare a new Person struct.
 	var t NewTrack
 
@@ -62,7 +62,7 @@ func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	dataHashed := asset.HashAsset(dataParsed)
 
 	// Send data to relational database
-	go storage.InsertTrack("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
+	go storage.InsertTrack("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, dataParsed, data.Reference)
 
 	// Send hashed data to Blockchain
 	var tag = RandStringRunes(25)
@@ -72,7 +72,7 @@ func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	resp := make(map[string]string)
-	resp["message"] = "Segment Created"
+	resp["message"] = "Track Created"
 	jsonResp, err := json.Marshal(resp)
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)

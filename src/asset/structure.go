@@ -14,11 +14,11 @@ type Asset struct {
 	Reference string `json:"reference"`
 }
 
-func CreateAsset(data string, mobileID string, ref string) *Asset {
+func CreateAsset(context string, mobileID string, ref string) *Asset {
 	// Generate a UUID
 	id := uuid.New()
 	// Create a new hash message with the data received
-	asset := Asset{ID: id.String(), Owner: mobileID, Data: data, Reference: ref}
+	asset := Asset{ID: id.String(), Owner: mobileID, Data: context, Reference: ref}
 	return &asset
 }
 

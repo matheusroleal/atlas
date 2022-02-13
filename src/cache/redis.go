@@ -27,6 +27,7 @@ func GetData(address string, password string, key string) string {
 		log.Println("[CACHE] ", err)
 		return ""
 	}
+	log.Println("[CACHE] ", val)
 	return val
 }
 
