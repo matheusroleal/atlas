@@ -2,7 +2,9 @@ package iota
 
 import (
 	"bytes"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 
 	. "github.com/iotaledger/iota.go/api"
@@ -58,9 +60,9 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 		panic(err)
 	}
 	var transfers bundle.Transfers
-	limit := 50
-	for i := 0; i < len(bulk); i += limit {
-		batch := bulk[i:min(i+limit, len(bulk))]
+	limit, _ := strconv.ParseInt(os.Getenv("BULK_TRANSFER_LIMIT"), 10, 64)
+	for i := 0; i < len(bulk); i += int(limit) {
+		batch := bulk[i:min(i+int(limit), len(bulk))]
 		transfers = prepareBulkArray(address, batch, tag)
 		// We need to pass an options object, since we want to use the defaults it stays empty
 		prepTransferOpts := PrepareTransfersOptions{}

@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/matheusroleal/atlas/src/asset"
@@ -40,14 +41,16 @@ func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	dataParsed := string(b)
 	dataHashed := asset.HashAsset(dataParsed)
 
+	mysqlEndpoint := "tcp(" + os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT") + ")"
 	// Send data to relational database
-	go storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, dataParsed, data.Reference)
+	go storage.InsertSegment("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, data.ID, dataParsed, data.Reference)
 
+	redisEndpoint := os.Getenv("REDIS_HOST") + ":" + os.Getenv("PASSWORD_HOST")
 	// Bulk hashed data to send to Blockchain later
-	if cache.GetData("0.0.0.0:6379", "", "segments") != "" {
-		go cache.AppendData("0.0.0.0:6379", "", "segments", ","+dataHashed)
+	if cache.GetData(redisEndpoint, "", "segments") != "" {
+		go cache.AppendData(redisEndpoint, "", "segments", ","+dataHashed)
 	} else {
-		go cache.SetData("0.0.0.0:6379", "", "segments", dataHashed)
+		go cache.SetData(redisEndpoint, "", "segments", dataHashed)
 	}
 
 	// Request return

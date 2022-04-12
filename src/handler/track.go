@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+	"os"
 
 	"github.com/iotaledger/iota.go/trinary"
 	"github.com/julienschmidt/httprouter"
@@ -13,8 +14,6 @@ import (
 	iotaHandler "github.com/matheusroleal/atlas/src/blockchain/iota"
 	"github.com/matheusroleal/atlas/src/storage"
 )
-
-const endpoint = "https://nodes.devnet.iota.org:443"
 
 // We need a dummy seed even though we don't sign, because the API requires a seed to send
 const seed = trinary.Trytes("JBN9ZRCOH9YRUGSWIQNZWAIFEZUBDUGTFPVRKXWPAUCEQQFS9NHPQLXCKZKRHVCCUZNF9CZZWKXRZVCWQ")
@@ -47,8 +46,10 @@ func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
+	mysqlEndpoint := "tcp(" + os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT") + ")"
+
 	// Get list of Segments related to a Reference ID and compact to one asset
-	segments := storage.GetSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", t.Reference)
+	segments := storage.GetSegment("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, t.Reference)
 	track := asset.CompressAsset(segments)
 	data := asset.CreateAsset(track, t.Identification, t.Reference)
 
@@ -62,11 +63,11 @@ func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	dataHashed := asset.HashAsset(dataParsed)
 
 	// Send data to relational database
-	go storage.InsertTrack("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, dataParsed, data.Reference)
+	go storage.InsertTrack("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, data.ID, dataParsed, data.Reference)
 
 	// Send hashed data to Blockchain
 	var tag = RandStringRunes(25)
-	go iotaHandler.StoreData(endpoint, seed, address, dataHashed, tag)
+	go iotaHandler.StoreData(os.Getenv("IOTA_HOST"), seed, address, dataHashed, tag)
 
 	// Request return
 	w.WriteHeader(http.StatusOK)
