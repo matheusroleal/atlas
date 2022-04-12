@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/matheusroleal/atlas/src/asset"
 )
@@ -61,6 +61,6 @@ func InsertTrack(driver string, user string, password string, database string, a
 		panic(err.Error())
 	}
 	insForm.Exec(owner, data, reference)
-	log.Println("[STORAGE] INSERT: Owner: " + owner + " | Data: " + data)
+	log.Debug("[STORAGE] INSERT: Owner: " + owner + " | Data: " + data)
 	defer db.Close()
 }

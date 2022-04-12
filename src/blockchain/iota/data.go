@@ -2,7 +2,6 @@ package iota
 
 import (
 	"bytes"
-	"log"
 	"sort"
 	"strings"
 
@@ -10,6 +9,7 @@ import (
 	"github.com/iotaledger/iota.go/bundle"
 	"github.com/iotaledger/iota.go/converter"
 	"github.com/iotaledger/iota.go/trinary"
+	log "github.com/sirupsen/logrus"
 )
 
 const mwm = 9
@@ -47,8 +47,8 @@ func StoreData(endpoint string, seed string, address string, data string, tag st
 		panic(err)
 	}
 	var txhash = bundle.TailTransactionHash(bndl)
-	log.Println("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
-	log.Printf("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
+	log.Debug("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
+	log.Debug("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
 }
 
 func BulkData(endpoint string, seed string, address string, bulk []string, tag string) {
@@ -58,7 +58,7 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 		panic(err)
 	}
 	var transfers bundle.Transfers
-	limit := 200
+	limit := 50
 	for i := 0; i < len(bulk); i += limit {
 		batch := bulk[i:min(i+limit, len(bulk))]
 		transfers = prepareBulkArray(address, batch, tag)
@@ -75,8 +75,8 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 			panic(err)
 		}
 		var txhash = bundle.TailTransactionHash(bndl)
-		log.Println("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
-		log.Printf("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
+		log.Debug("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
+		log.Debug("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
 	}
 }
 
@@ -110,7 +110,7 @@ func RetriveData(endpoint string, address string, tag string) {
 		panic(err)
 	}
 	// We print out the message
-	log.Println("[IOTA] DEBUG: Query Result ", msg)
+	log.Debug("[IOTA] DEBUG: Query Result ", msg)
 }
 
 func prepareBulkArray(address string, bulk []string, tag string) bundle.Transfers {

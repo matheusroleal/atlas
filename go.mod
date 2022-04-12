@@ -9,4 +9,5 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/iotaledger/iota.go v1.0.0-beta.6.0.20190515164030-be44c22b15b7
 	github.com/julienschmidt/httprouter v1.3.0
+	github.com/sirupsen/logrus v1.8.1
 )

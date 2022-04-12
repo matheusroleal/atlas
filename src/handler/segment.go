@@ -2,14 +2,13 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-
 	"github.com/matheusroleal/atlas/src/asset"
 	"github.com/matheusroleal/atlas/src/cache"
 	"github.com/matheusroleal/atlas/src/storage"
+	log "github.com/sirupsen/logrus"
 )
 
 type NewSegment struct {
@@ -58,7 +57,7 @@ func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	resp["message"] = "Segment Created"
 	jsonResp, err := json.Marshal(resp)
 	if err != nil {
-		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+		log.Error("Error happened in JSON marshal. Err: %s", err)
 	}
 	w.Write(jsonResp)
 }

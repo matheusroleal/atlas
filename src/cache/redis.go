@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/go-redis/redis"
 )
@@ -24,10 +24,10 @@ func GetData(address string, password string, key string) string {
 	// we can call get with a `Key`.
 	val, err := client.Get(key).Result()
 	if err != nil {
-		log.Println("[CACHE] ", err)
+		log.Error("[CACHE] ", err)
 		return ""
 	}
-	log.Println("[CACHE] ", val)
+	log.Debug("[CACHE] ", val)
 	return val
 }
 
@@ -38,7 +38,7 @@ func SetData(address string, password string, key string, value string) {
 	// if there has been an error setting the value
 	// handle the error
 	if err != nil {
-		log.Println("[CACHE] ", err)
+		log.Error("[CACHE] ", err)
 	}
 }
 
@@ -49,6 +49,6 @@ func AppendData(address string, password string, key string, value string) {
 	// if there has been an error setting the value
 	// handle the error
 	if err != nil {
-		log.Println("[CACHE] ", err)
+		log.Error("[CACHE] ", err)
 	}
 }

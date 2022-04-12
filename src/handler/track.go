@@ -2,14 +2,14 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"math/rand"
 	"net/http"
 
 	"github.com/iotaledger/iota.go/trinary"
 	"github.com/julienschmidt/httprouter"
-
 	"github.com/matheusroleal/atlas/src/asset"
+	log "github.com/sirupsen/logrus"
+
 	iotaHandler "github.com/matheusroleal/atlas/src/blockchain/iota"
 	"github.com/matheusroleal/atlas/src/storage"
 )
@@ -75,7 +75,7 @@ func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	resp["message"] = "Track Created"
 	jsonResp, err := json.Marshal(resp)
 	if err != nil {
-		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+		log.Error("Error happened in JSON marshal. Err: %s", err)
 	}
 	w.Write(jsonResp)
 }
