@@ -1,3 +1,9 @@
+/*
+ * @Author: Matheus Leal
+ * @Date: 2022-07-01 22:54:54
+ * @Last Modified by:   Matheus Leal
+ * @Last Modified time: 2022-07-01 22:54:54
+ */
 package asset
 
 import (
