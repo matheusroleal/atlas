@@ -1,8 +1,8 @@
 /*
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:49
- * @Last Modified by:   Matheus Leal
- * @Last Modified time: 2022-07-01 22:54:49
+ * @Last Modified by: Matheus Leal
+ * @Last Modified time: 2022-07-02 11:07:41
  */
 package iota
 
@@ -23,16 +23,18 @@ import (
 const mwm = 9
 const depth = 3
 
-func StoreData(endpoint string, seed string, address string, data string, tag string) {
+func StoreData(endpoint string, seed string, address string, data string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	// Convert a ascii message for the transaction to trytes,if possible
 	message, err := converter.ASCIIToTrytes(data)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	transfers := bundle.Transfers{
 		{
@@ -46,24 +48,29 @@ func StoreData(endpoint string, seed string, address string, data string, tag st
 	prepTransferOpts := PrepareTransfersOptions{}
 	trytes, err := api.PrepareTransfers(seed, transfers, prepTransferOpts)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	// Send the transaction to the tangle using given depth and minimum weight magnitude
 	// _, err = api.SendTrytes(trytes, depth, mwm)
 	bndl, err := api.SendTrytes(trytes, depth, mwm)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	var txhash = bundle.TailTransactionHash(bndl)
-	log.Debug("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
-	log.Debug("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
+	log.Debug("[IOTA] broadcasted bundle with tail tx hash: " + txhash)
+	log.Debug("[IOTA] https://explorer.iota.org/legacy-devnet/transaction/" + txhash)
+
+	return nil
 }
 
-func BulkData(endpoint string, seed string, address string, bulk []string, tag string) {
+func BulkData(endpoint string, seed string, address string, bulk []string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	var transfers bundle.Transfers
 	limit, _ := strconv.ParseInt(os.Getenv("BULK_TRANSFER_LIMIT"), 10, 64)
@@ -74,25 +81,29 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 		prepTransferOpts := PrepareTransfersOptions{}
 		trytes, err := api.PrepareTransfers(seed, transfers, prepTransferOpts)
 		if err != nil {
-			panic(err)
+			log.Error(err)
+			return err
 		}
 		// Send the transaction to the tangle using given depth and minimum weight magnitude
 		bndl, err := api.SendTrytes(trytes, depth, mwm)
 		// _, err = api.SendTrytes(trytes, depth, mwm)
 		if err != nil {
-			panic(err)
+			log.Error(err)
+			return err
 		}
 		var txhash = bundle.TailTransactionHash(bndl)
-		log.Debug("[IOTA] DEBUG: broadcasted bundle with tail tx hash: ", txhash)
-		log.Debug("[IOTA] DEBUG: https://explorer.iota.org/legacy-devnet/transaction/%s\n\n", txhash)
+		log.Debug("[IOTA] broadcasted bundle with tail tx hash: " + txhash)
+		log.Debug("[IOTA] https://explorer.iota.org/legacy-devnet/transaction/" + txhash)
 	}
+	return nil
 }
 
-func RetriveData(endpoint string, address string, tag string) {
+func RetriveData(endpoint string, address string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	// We need a query object containing the address we want to look for
 	var modifiedTag = tag + strings.Repeat("9", 27-len(tag))
@@ -100,7 +111,8 @@ func RetriveData(endpoint string, address string, tag string) {
 	// Find Transaction Objects uses the connected node to find transactions based on our query
 	transactions, err := api.FindTransactionObjects(query)
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	// We need to sort all transactions by index first so we can concatenate them
 	sort.Slice(transactions[:], func(i, j int) bool {
@@ -115,10 +127,12 @@ func RetriveData(endpoint string, address string, tag string) {
 	// We need to convert the message to ASCII, but before we do that we need to remove
 	msg, err := converter.TrytesToASCII(removeSuffixNine(buffer.String()))
 	if err != nil {
-		panic(err)
+		log.Error(err)
+		return err
 	}
 	// We print out the message
-	log.Debug("[IOTA] DEBUG: Query Result ", msg)
+	log.Debug("[IOTA] DEBUG: Query Result " + msg)
+	return nil
 }
 
 func prepareBulkArray(address string, bulk []string, tag string) bundle.Transfers {
@@ -127,7 +141,8 @@ func prepareBulkArray(address string, bulk []string, tag string) bundle.Transfer
 		// Convert a ascii message for the transaction to trytes,if possible
 		message, err := converter.ASCIIToTrytes(data)
 		if err != nil {
-			panic(err)
+			log.Error(err)
+			return nil
 		}
 		// Create a transfer
 		var transfer bundle.Transfer = bundle.Transfer{
