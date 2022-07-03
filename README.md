@@ -12,6 +12,10 @@ Our systems tries to make it simple to create links cross-chains. In other words
 
 ## How it works?
 
+This API helps a Mobility Observer Agent(MOA) store positioning data on a Blockchain. Each time MOA wants to create a checkpoint in a new region, it sends an id and data to Atlas. The API then creates a structure comprised of the checkpoint, a timestamp, an id, and a reference id and sends it to a lower Blockchain layer. To facilitate possible GET methods, the API stores this data in a database.
+
+Every time a client wants to consolidate a set of checkpoints, it can send the old identification. The API is responsible for retrieving the checkpoints corresponding to the lower Blockchain layer and compiling them on a segment for the upper layer. MOA also sends the compiled data to a local database for API performance. 
+
 ![Atlas Diagram](docs/images/BlockchainMiddleware.png?raw=true "Icon retrive from https://www.vectorstock.com/royalty-free-vector/atlas-holding-up-world-mascot-vector-20996478")
 
 - [Available API routes](docs)
