@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:44
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-02 11:19:57
+ * @Last Modified time: 2022-07-03 14:04:59
  */
 package iota
 
@@ -16,6 +16,12 @@ import (
 
 var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
+/**
+ * Get the IOTA node info.
+ *
+ * @param   endpoint	string		A string with the IOTA address
+ * @return  					error			Conection error
+ */
 func NodeInfo(endpoint string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
@@ -34,6 +40,12 @@ func NodeInfo(endpoint string) error {
 	return nil
 }
 
+/**
+ * Generate a random rune string.
+ *
+ * @param   n			int				A int with the size of the rune
+ * @return  			string		random rune string
+ */
 func RandStringRunes(n int) string {
 	b := make([]rune, n)
 	for i := range b {

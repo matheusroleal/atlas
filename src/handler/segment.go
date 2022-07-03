@@ -1,8 +1,8 @@
 /*
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:00
- * @Last Modified by:   Matheus Leal
- * @Last Modified time: 2022-07-01 22:54:00
+ * @Last Modified by: Matheus Leal
+ * @Last Modified time: 2022-07-03 14:12:47
  */
 package handler
 
@@ -24,6 +24,13 @@ type NewSegment struct {
 	Data           string
 }
 
+/**
+ * Segment HTTP route handler.
+ *
+ * @param   w				http.ResponseWriter			The header map that will be sent by WriteHeader
+ *					req			http.Request						Specifies the HTTP method
+ * @return
+ */
 func SegmentCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// Declare a new Person struct.
 	var t NewSegment

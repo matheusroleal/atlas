@@ -1,8 +1,8 @@
 /*
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:13
- * @Last Modified by:   Matheus Leal
- * @Last Modified time: 2022-07-01 22:54:13
+ * @Last Modified by: Matheus Leal
+ * @Last Modified time: 2022-07-03 14:21:31
  */
 package server
 
@@ -16,6 +16,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+/**
+ * HTTP route handler.
+ *
+ * @param
+ * @return
+ */
 func RunServer() {
 	router := httprouter.New()
 

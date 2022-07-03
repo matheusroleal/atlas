@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:49
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-02 11:07:41
+ * @Last Modified time: 2022-07-03 14:08:24
  */
 package iota
 
@@ -23,6 +23,16 @@ import (
 const mwm = 9
 const depth = 3
 
+/**
+ * Store a new Asset into IOTA Blockchain.
+ *
+ * @param   endpoint 		string		IOTA endpoint string
+ *					seed				string		IOTA seed string
+ *					address			string		IOTA address string
+ *					data				string		Asset data string
+ *					tag					string		Asset identification string
+ * @return  						Asset			A Asset struct
+ */
 func StoreData(endpoint string, seed string, address string, data string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
@@ -65,6 +75,16 @@ func StoreData(endpoint string, seed string, address string, data string, tag st
 	return nil
 }
 
+/**
+ * Store a Bulk of Assets into IOTA Blockchain.
+ *
+ * @param   endpoint 		string		IOTA endpoint string
+ *					seed				string		IOTA seed string
+ *					address			string		IOTA address string
+ *					bulk				string		A list of Asset data string
+ *					tag					string		Asset identification string
+ * @return  						Asset			A Asset struct
+ */
 func BulkData(endpoint string, seed string, address string, bulk []string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
@@ -98,6 +118,14 @@ func BulkData(endpoint string, seed string, address string, bulk []string, tag s
 	return nil
 }
 
+/**
+ * Retrive a Asset from IOTA Blockchain.
+ *
+ * @param   endpoint 		string		IOTA endpoint string
+ *					address			string		IOTA address string
+ *					tag					string		Asset identification string
+ * @return  						Asset			A Asset struct
+ */
 func RetriveData(endpoint string, address string, tag string) error {
 	// Compose a new API instance
 	api, err := ComposeAPI(HTTPClientSettings{URI: endpoint})
@@ -135,6 +163,14 @@ func RetriveData(endpoint string, address string, tag string) error {
 	return nil
 }
 
+/**
+ * Prepare a Bulk of Assets into a bundle.Transfers for IOTA Blockchain.
+ *
+ * @param   address		string						IOTA address string
+ *					bulk			[]string					A list of Asset data string
+ *					tag				string						Asset identification string
+ * @return  					bundle.Transfers	A bundle.Transfers struct
+ */
 func prepareBulkArray(address string, bulk []string, tag string) bundle.Transfers {
 	var transfers bundle.Transfers
 	for _, data := range bulk {
@@ -157,6 +193,13 @@ func prepareBulkArray(address string, bulk []string, tag string) bundle.Transfer
 	return transfers
 }
 
+/**
+ * Return the minumum value between 2 integers.
+ *
+ * @param   a		int		First integer
+ *					b		int		Second integer
+ * @return  		int		Minumum value between the 2 int
+ */
 func min(a, b int) int {
 	if a <= b {
 		return a
@@ -164,6 +207,12 @@ func min(a, b int) int {
 	return b
 }
 
+/**
+ * Remove the 9s suffixs from a string.
+ *
+ * @param   frag	string		A string containing 9s at the end
+ * @return  			string		A string without 9s at the end
+ */
 func removeSuffixNine(frag string) string {
 	fraglen := len(frag)
 	var firstNonNineAt int
