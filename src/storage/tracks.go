@@ -1,8 +1,8 @@
 /*
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:28
- * @Last Modified by:   Matheus Leal
- * @Last Modified time: 2022-07-01 22:54:28
+ * @Last Modified by: Matheus Leal
+ * @Last Modified time: 2022-07-03 12:16:53
  */
 package storage
 
@@ -12,11 +12,12 @@ import (
 	"github.com/matheusroleal/atlas/src/asset"
 )
 
-func IndexTracks(driver string, user string, password string, database string, address string) []asset.Asset {
+func IndexTracks(driver string, user string, password string, database string, address string) ([]asset.Asset, error) {
 	db := dbConn(driver, user, password, database, address)
 	selDB, err := db.Query("SELECT * FROM Tracks ORDER BY id DESC")
 	if err != nil {
-		panic(err.Error())
+		log.Error(err)
+		return nil, err
 	}
 	emp := asset.Asset{}
 	res := []asset.Asset{}
@@ -25,7 +26,8 @@ func IndexTracks(driver string, user string, password string, database string, a
 		var owner, data, reference string
 		err = selDB.Scan(&id, &owner, &data, &reference)
 		if err != nil {
-			panic(err.Error())
+			log.Error(err)
+			return nil, err
 		}
 		emp.ID = string(rune(id))
 		emp.Owner = owner
@@ -33,14 +35,15 @@ func IndexTracks(driver string, user string, password string, database string, a
 		res = append(res, emp)
 	}
 	defer db.Close()
-	return res
+	return res, nil
 }
 
-func ShowTrack(driver string, user string, password string, database string, address string, id string) []asset.Asset {
+func GetTrack(driver string, user string, password string, database string, address string, id string) ([]asset.Asset, error) {
 	db := dbConn(driver, user, password, database, address)
 	selDB, err := db.Query("SELECT * FROM Tracks WHERE Reference=?", id)
 	if err != nil {
-		panic(err.Error())
+		log.Error(err)
+		return nil, err
 	}
 	res := []asset.Asset{}
 	emp := asset.Asset{}
@@ -49,7 +52,8 @@ func ShowTrack(driver string, user string, password string, database string, add
 		var owner, data, reference string
 		err = selDB.Scan(&id, &owner, &data, &reference)
 		if err != nil {
-			panic(err.Error())
+			log.Error(err)
+			return nil, err
 		}
 		emp.ID = string(rune(id))
 		emp.Owner = owner
@@ -57,16 +61,18 @@ func ShowTrack(driver string, user string, password string, database string, add
 		res = append(res, emp)
 	}
 	defer db.Close()
-	return res
+	return res, nil
 }
 
-func InsertTrack(driver string, user string, password string, database string, address string, owner string, data string, reference string) {
+func InsertTrack(driver string, user string, password string, database string, address string, owner string, data string, reference string) error {
 	db := dbConn(driver, user, password, database, address)
 	insForm, err := db.Prepare("INSERT INTO Tracks(owner, data, reference) VALUES(?,?,?)")
 	if err != nil {
-		panic(err.Error())
+		log.Error(err)
+		return err
 	}
 	insForm.Exec(owner, data, reference)
 	log.Debug("[STORAGE] INSERT: Owner: " + owner + " | Data: " + data)
 	defer db.Close()
+	return nil
 }
