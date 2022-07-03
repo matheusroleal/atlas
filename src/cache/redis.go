@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:39
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-03 14:02:56
+ * @Last Modified time: 2022-07-03 14:26:13
  */
 package cache
 
@@ -36,10 +36,10 @@ func cacheConn(address string, password string) *redis.Client {
 /**
  * Get a data from a Redis server.
  *
- * @param   address				string				Redis server address
+ * @param		address				string				Redis server address
  *					password			string	 			Redis server password
  *					key						string	 			Redis server key
- * @return  							string				A Redis server key value
+ * @return								string				A Redis server key value
  */
 func GetData(address string, password string, key string) string {
 	client := cacheConn(address, password)
@@ -56,11 +56,11 @@ func GetData(address string, password string, key string) string {
 /**
  * Insert a data from a Redis server.
  *
- * @param  address				string				Redis server address
+ * @param		address				string				Redis server address
  *					password			string	 			Redis server password
  *					key						string	 			Redis server key
  *					value					string	 			Redis server key value
- * @return  							error					A Redis server error
+ * @return								error					A Redis server error
  */
 func SetData(address string, password string, key string, value string) error {
 	client := cacheConn(address, password)
@@ -82,7 +82,7 @@ func SetData(address string, password string, key string, value string) error {
  *					password			string	 			Redis server password
  *					key						string	 			Redis server key
  *					value					string	 			Redis server key value
- * @return  							error					A Redis server error
+ * @return								error					A Redis server error
  */
 func AppendData(address string, password string, key string, value string) error {
 	client := cacheConn(address, password)

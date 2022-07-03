@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:54
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-03 14:10:07
+ * @Last Modified time: 2022-07-03 14:25:12
  */
 package asset
 
@@ -26,10 +26,10 @@ type Asset struct {
  * into an abstract pathname. If the given strings are the
  * empty string, then the result is the empty Asset.
  *
- * @param   context 			string		Context string
+ * @param		context 			string		Context string
  *					mobileID 			string		Mobile identification string
  *					reference 		string		A reference string
- * @return  							Asset			A Asset struct
+ * @return								Asset			A Asset struct
  */
 func CreateAsset(context string, mobileID string, ref string) *Asset {
 	// Generate a UUID
@@ -44,8 +44,8 @@ func CreateAsset(context string, mobileID string, ref string) *Asset {
  * then into an string pathname. If the given array is empty
  * then the result is the empty string.
  *
- * @param   segments  []Asset		A list of Asset
- * @return  					Asset			A Asset string
+ * @param		segments  []Asset		A list of Asset
+ * @return						Asset			A Asset string
  */
 func CompressAsset(segments []Asset) string {
 	return segments[0].Data + "," + segments[len(segments)-1].Data
@@ -55,8 +55,8 @@ func CompressAsset(segments []Asset) string {
  * Convert a Asset string into an hash. If the given array is empty
  * then the result is the empty hash.
  *
- * @param   data  	string		A Asset string
- * @return  				string		A hash string
+ * @param		data  	string		A Asset string
+ * @return					string		A hash string
  */
 func HashAsset(data string) string {
 	h := sha1.New()

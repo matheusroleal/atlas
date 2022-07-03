@@ -1,0 +1,48 @@
+@startuml
+legend
+<u><b>Legend</b></u>
+Render Aggregations: true
+Render Fields: true
+Render Methods: true
+Pritave Aggregations: false
+end legend
+namespace asset {
+    class Asset << (S,Aquamarine) >> {
+        + ID string
+        + Owner string
+        + Data string
+        + Reference string
+
+    }
+}
+
+
+
+namespace handler {
+    class Index << (S,Aquamarine) >> {
+        + Description string
+        + Href string
+
+    }
+    class Link << (S,Aquamarine) >> {
+        + Description string
+        + Method []Link
+
+    }
+    class NewSegment << (S,Aquamarine) >> {
+        + Reference string
+        + Identification string
+        + Data string
+
+    }
+    class NewTrack << (S,Aquamarine) >> {
+        + Reference string
+        + Identification string
+
+    }
+}
+
+
+"handler.Link""uses" o-- "handler.Link"
+
+@enduml
