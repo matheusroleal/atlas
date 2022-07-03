@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:57:46
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-01 22:59:48
+ * @Last Modified time: 2022-07-03 12:08:06
  */
 package test
 
@@ -19,7 +19,7 @@ import (
 func bulkInsertionTest() {
 	// Create blocks of data with tags
 	for j := 0; j < 31; j++ {
-		var tag = RandStringRunes(25)
+		var tag = iotaHandler.RandStringRunes(25)
 		log.Debug("[Atlas][Test] " + tag)
 		// Our data is very long here, it needs to be split over several transactions, 3 in this case
 		sum := 0

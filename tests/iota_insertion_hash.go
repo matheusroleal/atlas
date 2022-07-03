@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:57:49
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-01 22:59:54
+ * @Last Modified time: 2022-07-03 12:06:48
  */
 package test
 
@@ -20,7 +20,7 @@ import (
 func hashInsertionTest() {
 	// Create blocks of data with tags
 	for j := 0; j < 31; j++ {
-		var tag = RandStringRunes(25)
+		var tag = iotaHandler.RandStringRunes(25)
 		log.Debug("[Atlas][Test] " + tag)
 		// Our data is very long here, it needs to be split over several transactions, 3 in this case
 		sum := 0
@@ -29,7 +29,10 @@ func hashInsertionTest() {
 
 		for i := 0; i < 100; i++ {
 			data := asset.CreateAsset(fmt.Sprintf("%s%d", "checkpoint ", sum), fmt.Sprintf("%d", j), "Track1")
-			storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
+			err := storage.InsertSegment("mysql", "root", "password", "Atlas", "tcp(0.0.0.0:6603)", data.ID, data.Data, data.Reference)
+			if err != nil {
+				return
+			}
 			// Bulk hashed data to be sent to Blockchain
 			segments = append(segments, *data)
 			sum += i

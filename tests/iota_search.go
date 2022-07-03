@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:57:52
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-01 22:59:57
+ * @Last Modified time: 2022-07-03 12:07:26
  */
 package test
 
@@ -19,7 +19,7 @@ import (
 func searchInsertionTest() {
 	// Create blocks of data with tags
 	for j := 0; j < 31; j++ {
-		var tag = RandStringRunes(25)
+		var tag = iotaHandler.RandStringRunes(25)
 		log.Debug("[Atlas][Test] " + tag)
 		// Our data is very long here, it needs to be split over several transactions, 3 in this case
 		sum := 0
@@ -44,8 +44,10 @@ func searchInsertionTest() {
 		log.Println(dataHashed)
 
 		// Send hashed data to Blockchain
-		iotaHandler.StoreData(endpoint, seed, address, dataHashed, tag)
-
+		err = iotaHandler.StoreData(endpoint, seed, address, dataHashed, tag)
+		if err != nil {
+			return
+		}
 		t1 := time.Now()
 		iotaHandler.RetriveData(endpoint, address, tag)
 		t2 := time.Now()

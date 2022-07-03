@@ -2,7 +2,7 @@
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:54:44
  * @Last Modified by: Matheus Leal
- * @Last Modified time: 2022-07-02 11:28:17
+ * @Last Modified time: 2022-07-02 11:29:41
  */
 package iota
 
@@ -33,7 +33,6 @@ func TestNodeInfo(t *testing.T) {
 }
 
 func TestRandStringRunes(t *testing.T) {
-	const endpoint = "https://nodes.devnet.iota.org:443"
 	tests := []struct {
 		n    int
 		want string

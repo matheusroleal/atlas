@@ -1,14 +1,13 @@
 /*
  * @Author: Matheus Leal
  * @Date: 2022-07-01 22:53:33
- * @Last Modified by:   Matheus Leal
- * @Last Modified time: 2022-07-01 22:53:33
+ * @Last Modified by: Matheus Leal
+ * @Last Modified time: 2022-07-03 12:40:07
  */
 package handler
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 	"os"
 
@@ -17,6 +16,7 @@ import (
 	"github.com/matheusroleal/atlas/src/asset"
 	log "github.com/sirupsen/logrus"
 
+	"github.com/matheusroleal/atlas/src/blockchain/iota"
 	iotaHandler "github.com/matheusroleal/atlas/src/blockchain/iota"
 	"github.com/matheusroleal/atlas/src/storage"
 )
@@ -26,14 +26,6 @@ const seed = trinary.Trytes("JBN9ZRCOH9YRUGSWIQNZWAIFEZUBDUGTFPVRKXWPAUCEQQFS9NH
 const address = trinary.Trytes("XBN9ZRCOH9YRUGSWIQNZWAIFEZUBDUGTFPVRKXWPAUCEQQFS9NHPQLXCKZKRHVCCUZNF9CZZWKXRZVCWQMZOCAHYPD")
 
 var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func RandStringRunes(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
-}
 
 type NewTrack struct {
 	Reference      string
@@ -55,7 +47,11 @@ func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	mysqlEndpoint := "tcp(" + os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT") + ")"
 
 	// Get list of Segments related to a Reference ID and compact to one asset
-	segments := storage.GetSegment("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, t.Reference)
+	segments, err := storage.GetSegment("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, t.Reference)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	track := asset.CompressAsset(segments)
 	data := asset.CreateAsset(track, t.Identification, t.Reference)
 
@@ -72,7 +68,7 @@ func TrackCreate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	go storage.InsertTrack("mysql", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), "Atlas", mysqlEndpoint, data.ID, dataParsed, data.Reference)
 
 	// Send hashed data to Blockchain
-	var tag = RandStringRunes(25)
+	var tag = iota.RandStringRunes(25)
 	go iotaHandler.StoreData(os.Getenv("IOTA_HOST"), seed, address, dataHashed, tag)
 
 	// Request return
